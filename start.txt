@@ -1,0 +1,85 @@
+================================================================================
+  PAKISTAN SITUATION MONITOR - HOW TO RUN EVERYTHING
+  Project root: e:\palantir\pakistan-situation-monitor
+================================================================================
+
+Prerequisites (one-time)
+--------------------------
+- Python 3.11+ on PATH
+- Node.js 20+ and npm
+- Local PostgreSQL with database: monitor (adjust user/password in backend\.env if yours differ)
+- Ollama installed from https://ollama.com
+
+First-time setup
+----------------
+1) Backend (once):
+   cd e:\palantir\pakistan-situation-monitor\backend
+   python -m venv venv
+   .\venv\Scripts\activate
+   pip install -r requirements.txt
+   (Copy .env.example to .env if you have not; default points at localhost:5432)
+
+2) Frontend (once):
+   cd e:\palantir\pakistan-situation-monitor\frontend
+   npm install
+
+3) Ollama model (once):
+   ollama pull qwen3:8b
+
+================================================================================
+RUN (use 4 separate terminal windows)
+================================================================================
+
+TERMINAL 1 - PostgreSQL (local)
+-------------------------------
+Ensure PostgreSQL is running and the database "monitor" exists (see pgAdmin).
+backend\.env DATABASE_URL must match your host, user, password, and db name.
+
+(Optional: Docker DB instead: docker compose up db -d — uses pak_monitor in compose.)
+
+
+TERMINAL 2 - Ollama (if not already running as a service)
+----------------------------------------------------------
+ollama serve
+
+(In another one-off run if needed: ollama pull qwen3:8b)
+
+
+TERMINAL 3 - Backend API
+------------------------
+cd e:\palantir\pakistan-situation-monitor\backend
+.\venv\Scripts\activate
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+
+Health check: http://localhost:8000/health
+
+
+TERMINAL 4 - Frontend
+---------------------
+cd e:\palantir\pakistan-situation-monitor\frontend
+npm run dev
+
+Dashboard: http://localhost:3000
+
+Add data: use "Add Signal", "Ingest Feeds" (configure X/FB in backend\.env), or POST /api/raw-posts/process — see API docs.
+
+
+================================================================================
+Full stack with Docker (alternative)
+================================================================================
+Start PostgreSQL + backend + frontend containers (Ollama stays on the host):
+
+cd e:\palantir\pakistan-situation-monitor
+docker compose up --build
+
+Ensure Ollama is running on the host; backend uses host.docker.internal for AI.
+
+
+================================================================================
+URLs
+================================================================================
+Frontend:  http://localhost:3000
+Backend:   http://localhost:8000
+API docs:  http://localhost:8000/docs
+Ollama:    http://localhost:11434
+
