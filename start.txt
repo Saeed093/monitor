@@ -3,6 +3,17 @@
   Project root: e:\palantir\pakistan-situation-monitor
 ================================================================================
 
+Git / Cursor — avoid two Source Control panels
+-----------------------------------------------
+This repo is a single Git repository at the project root (backend + frontend together).
+If Cursor shows two repos (e.g. "frontend" and "pakistan-situation-monitor"):
+  • File → Close Workspace / Close Folder, then open ONLY this folder:
+      e:\palantir\pakistan-situation-monitor
+    Do not add "frontend" as a second workspace folder.
+  • Or: File → Open Workspace from File… → pick:
+      pakistan-situation-monitor.code-workspace
+There must be no folder named "frontend\.git" inside the project (nested repos).
+
 Prerequisites (one-time)
 --------------------------
 - Python 3.11+ on PATH
